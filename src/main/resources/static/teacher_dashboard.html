@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Teacher Dashboard</title>
+</head>
+<body>
+<div class="sidebar">
+    <h2>Teacher Dashboard</h2>
+    <ul>
+        <li><a href="#" onclick="navigate('mark-attendance')">Mark Attendance</a></li>
+        <li><a href="#" onclick="navigate('assign-grades')">Assign Grades</a></li>
+    </ul>
+</div>
+<div class="main-content">
+    <h1>Welcome, Teacher</h1>
+    <div id="content-area">
+        <!-- Content will be loaded here dynamically -->
+    </div>
+</div>
+
+<script>
+    function navigate(section) {
+        let contentArea = document.getElementById('content-area');
+        switch (section) {
+            case 'mark-attendance':
+                contentArea.innerHTML = `<h3>Mark Attendance</h3>
+                        <form id="attendanceForm">
+                            <label for="studentId">Student ID:</label>
+                            <input type="text" id="studentId" name="studentId" required>
+                            <label for="courseId">Course ID:</label>
+                            <input type="text" id="courseId" name="courseId" required>
+                            <label for="status">Status:</label>
+                            <select id="status" name="status" required>
+                                <option value="Present">Present</option>
+                                <option value="Absent">Absent</option>
+                            </select>
+                            <button type="submit">Submit</button>
+                        </form>`;
+                document.getElementById("attendanceForm").addEventListener("submit", markAttendance);
+                break;
+            case 'assign-grades':
+                contentArea.innerHTML = `<h3>Assign Grades</h3>
+                        <form id="gradeForm">
+                            <label for="studentId">Student ID:</label>
+                            <input type="text" id="studentId" name="studentId" required>
+                            <label for="courseId">Course ID:</label>
+                            <input type="text" id="courseId" name="courseId" required>
+                            <label for="marks">Marks:</label>
+                            <input type="number" id="marks" name="marks" required>
+                            <button type="submit">Submit</button>
+                        </form>`;
+                document.getElementById("gradeForm").addEventListener("submit", assignGrades);
+                break;
+            default:
+                contentArea.innerHTML = '<p>Select a section from the sidebar.</p>';
+        }
+    }
+
+    async function markAttendance(event) {
+        event.preventDefault();
+        const studentId = document.getElementById("studentId").value;
+        const courseId = document.getElementById("courseId").value;
+        const status = document.getElementById("status").value;
+
+        try {
+            const response = await fetch("/api/attendance", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify({ studentId, courseId, status })
+            });
+
+            if (response.ok) {
+                alert("Attendance marked successfully!");
+            } else {
+                alert("Failed to mark attendance. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error marking attendance:", error);
+        }
+    }
+
+    async function assignGrades(event) {
+        event.preventDefault();
+        const studentId = document.getElementById("studentId").value;
+        const courseId = document.getElementById("courseId").value;
+        const marks = document.getElementById("marks").value;
+
+        try {
+            const response = await fetch("/api/grades", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify({ studentId, courseId, marks })
+            });
+
+            if (response.ok) {
+                alert("Grade assigned successfully!");
+            } else {
+                alert("Failed to assign grade. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error assigning grade:", error);
+        }
+    }
+</script>
+</body>
+</html>

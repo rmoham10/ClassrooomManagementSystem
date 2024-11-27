@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Parent Dashboard</title>
+</head>
+<body>
+<div class="sidebar">
+    <h2>Parent Dashboard</h2>
+    <ul>
+        <li><a href="#" onclick="navigate('child-attendance')">Child's Attendance</a></li>
+        <li><a href="#" onclick="navigate('child-grades')">Child's Grades</a></li>
+        <li><a href="#" onclick="navigate('leave-requests')">Leave Requests</a></li>
+    </ul>
+</div>
+<div class="main-content">
+    <h1>Welcome, Parent</h1>
+    <div id="content-area">
+        <!-- Content will be loaded here dynamically -->
+    </div>
+</div>
+
+<script>
+    function navigate(section) {
+        let contentArea = document.getElementById('content-area');
+        switch (section) {
+            case 'child-attendance':
+                loadChildAttendance();
+                break;
+            case 'child-grades':
+                loadChildGrades();
+                break;
+            case 'leave-requests':
+                contentArea.innerHTML = `<h3>Leave Requests</h3>
+                        <form id="leaveRequestForm">
+                            <label for="leaveDetails">Leave Details:</label>
+                            <input type="text" id="leaveDetails" name="leaveDetails" required>
+                            <label for="leaveDate">Leave Date:</label>
+                            <input type="date" id="leaveDate" name="leaveDate" required>
+                            <button type="submit">Submit</button>
+                        </form>`;
+                document.getElementById("leaveRequestForm").addEventListener("submit", submitLeaveRequest);
+                break;
+            default:
+                contentArea.innerHTML = '<p>Select a section from the sidebar.</p>';
+        }
+    }
+
+    async function loadChildAttendance() {
+        try {
+            const response = await fetch("/api/attendance/child", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+
+            if (response.ok) {
+                const attendanceRecords = await response.json();
+                let attendanceTable = '<table><tr><th>Date</th><th>Course</th><th>Status</th></tr>';
+                attendanceRecords.forEach(record => {
+                    attendanceTable += `<tr>
+                            <td>${record.date}</td>
+                            <td>${record.courseName}</td>
+                            <td>${record.status}</td>
+                        </tr>`;
+                });
+                attendanceTable += '</table>';
+                document.getElementById('content-area').innerHTML = attendanceTable;
+            } else {
+                alert("Failed to load attendance.");
+            }
+        } catch (error) {
+            console.error("Error loading attendance:", error);
+        }
+    }
+
+    async function loadChildGrades() {
+        try {
+            const response = await fetch("/api/grades/child", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+
+            if (response.ok) {
+                const grades = await response.json();
+                let gradeTable = '<table><tr><th>Course</th><th>Marks</th></tr>';
+                grades.forEach(grade => {
+                    gradeTable += `<tr>
+                            <td>${grade.courseName}</td>
+                            <td>${grade.marks}</td>
+                        </tr>`;
+                });
+                gradeTable += '</table>';
+                document.getElementById('content-area').innerHTML = gradeTable;
+            } else {
+                alert("Failed to load grades.");
+            }
+        } catch (error) {
+            console.error("Error loading grades:", error);
+        }
+    }
+
+    async function submitLeaveRequest(event) {
+        event.preventDefault();
+        const leaveDetails = document.getElementById("leaveDetails").value;
+        const leaveDate = document.getElementById("leaveDate").value;
+
+        try {
+            const response = await fetch("/api/leaverequests", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify({ leaveDetails, leaveDate })
+            });
+
+            if (response.ok) {
+                alert("Leave request submitted successfully!");
+            } else {
+                alert("Failed to submit leave request. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error submitting leave request:", error);
+        }
+    }
+</script>
+</body>
+</html>

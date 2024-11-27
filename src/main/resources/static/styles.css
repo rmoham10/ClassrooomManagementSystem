@@ -1,0 +1,164 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+/* Login Page Styles */
+.login-container {
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    height: 100vh;
+    position: fixed;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 8px;
+    background-color: #444;
+    border-radius: 4px;
+}
+
+.sidebar ul li a:hover {
+    background-color: #555;
+}
+
+/* Main Content Styles */
+.main-content {
+    margin-left: 220px;
+    padding: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+input[type="text"], input[type="date"], input[type="number"], select {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown > a::after {
+    content: " ▼";
+    float: right;
+    color: green; /* Green arrow indicator */
+}
+
+.dropdown-content {
+    display: none;
+    background-color: white; /* White background for dropdown */
+    margin-left: 20px;
+    border-radius: 5px; /* Optional for rounded corners */
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional for subtle shadow */
+    border: 1px solid #ddd; /* Light border for better separation */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    padding: 10px 20px;
+    display: block;
+    color: white; /* White text on green buttons */
+    text-decoration: none;
+    background-color: #2ecc71; /* Green background for buttons */
+    border: 1px solid #27ae60; /* Slightly darker green for button borders */
+    text-align: center; /* Center align text */
+    margin: 5px; /* Add spacing between buttons */
+    border-radius: 5px; /* Rounded corners for buttons */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: #27ae60; /* Darker green on hover */
+    transform: scale(1.05); /* Slight zoom effect */
+    color: white; /* Ensure text remains white */
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Login - Select Role</title>
+</head>
+<body
+        style="background-image: url('images/image_2.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+</body>
+<body>
+<div class="login-container">
+    <h2 id="role-title">Login</h2>
+    <form>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+    </form>
+</div>
+
+<script>
+    // Get the role from the query parameter and display it on the login page
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const role = urlParams.get('role');
+        if (role) {
+            document.getElementById('role-title').textContent = `Login as ${role.charAt(0).toUpperCase() + role.slice(1)}`;
+        }
+    });
+
+    document.querySelector("form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const role = urlParams.get('role');
+
+        try {
+            const response = await fetch(`/api/users/login?role=${role}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                localStorage.setItem("token", userData.token);
+                    // Redirect based on the role
+                    if (userData.role === "admin") {
+                        window.location.href = `admin_dashboard.html?role=${role}&userID=${userData.userID}`;
+                    } else if (userData.role === "teacher") {
+                        window.location.href = `teacher_dashboard.html?role=${role}`;
+                    } else if (userData.role === "student") {
+                        window.location.href = `student_dashboard.html?role=${role}`;
+                    } else if (userData.role === "parent") {
+                        window.location.href = `parent_dashboard.html?role=${role}`;
+                    } else {
+                        console.error("Unknown role:", userData.role);
+                        alert("Unknown role. Please contact support.");
+                    }
+                }
+            else {
+                    alert("Invalid credentials. Please try again.");
+                }
+        } catch (error) {
+            console.error("Error during login:", error);
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Admin Dashboard</title>
+</head>
+<body
+        style="background-image: url('images/image_2.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+</body>
+<body>
+<button onclick="goBack()">back</button>
+
+
+    <ul>
+        <li class="dropdown">
+            <a href="#">Admin</a>
+            <ul class="dropdown-content">
+                <li><a href="#" onclick="navigate('manage-users')">Manage Users</a></li>
+                <li><a href = "#" onclick="navigate('add-class')">Add Class</a></li>
+                <li><a href = "#" onclick="navigate('add-course')">Add Course</a></li>
+                <li><a href="#" onclick="navigate('manage-announcements')">Manage Announcements</a></li>
+                <li><a href="#" onclick="navigate('leave-requests')">Leave Requests</a></li>
+                <li><a href="#" onclick="navigate('view-announcements')">View Announcements</a></li>
+            </ul>
+        </li>
+    </ul>
+<div class="main-content">
+    <h1>Welcome, Admin</h1>
+    <div
+            id="content-area">
+    </div>
+
+    <!-- CreateUser Form -->
+    <form id="createUserForm" style="visibility: hidden">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required>
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="role">Role:</label>
+        <select id="role" name="role" required>
+            <option value="1">Admin</option>
+            <option value="2">Teacher</option>
+            <option value="3">Student</option>
+            <option value="4">Parent</option>
+        </select>
+
+        <button type="submit">Create User</button>
+    </form>
+
+    <!-- Post Announcement Form -->
+    <form id="postAnnouncementForm" style="visibility: hidden">
+        <label for="announcementTitle">Title:</label>
+        <input type="text" id="announcementTitle" name="announcementTitle" required>
+
+        <label for="announcementMessage">Message:</label>
+        <textarea id="announcementMessage" name="announcementMessage" required></textarea>
+
+        <button type="submit">Post Announcement</button>
+    </form>
+
+    <!--Add Classes Form -->
+    <form id="addClassForm" style="visibility: hidden">
+        <label for="className">Class:</label>
+        <input type="text" id="className" name="className" required>
+
+        <button type="submit">Add Class</button>
+    </form>
+
+    <!--Add courses Form -->
+    <form id="addCourseForm" style="visibility: hidden">
+        <label for="courseName">Course Name:</label>
+        <input type="text" id="courseName" name="courseName" required>
+
+        <button type="submit">Add Course</button>
+    </form>
+
+    <!-- Accept Leave Request Form -->
+    <form id="leaveRequestForm" style="visibility: hidden">
+        <label for="leaveRequestTitle">Title:</label>
+        <input type="text" id="leaveRequestTitle" name="leaveRequestTitle" required>
+
+        <label for="leaveRequestMessage">Message:</label>
+        <textarea id="leaveRequestMessage" name="leaveRequestMessage" required></textarea>
+
+        <button type="submit">Accept Leave Request</button>
+    </form>
+
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+        document.getElementById('createUserForm').style.visibility = 'hidden';
+        document.getElementById('leaveRequestForm').style.visibility = 'hidden';
+        document.getElementById('postAnnouncementForm').style.visibility = 'hidden';
+        document.getElementById('addClassForm').style.visibility = 'hidden';
+    }
+    function navigate(section) {
+        let contentArea = document.getElementById('content-area');
+        switch (section) {
+            case 'manage-users':
+                contentArea.innerHTML = '<h3>Create Users</h3><p>Here you can add, edit, or delete users.</p>';
+                document.getElementById('createUserForm').style.visibility = 'visible';
+                document.getElementById('addClassForm').style.visibility = 'hidden';
+                document.getElementById('leaveRequestForm').style.visibility = 'hidden';
+                document.getElementById('postAnnouncementForm').style.visibility = 'hidden';
+                break;
+            case 'add-class':
+                contentArea.innerHTML = '<h3>Add Class</h3><p>Here you can add class.</p>';
+                document.getElementById('addClassForm').style.visibility = 'visible';
+                document.getElementById('createUserForm').style.visibility = 'hidden';
+                document.getElementById('leaveRequestForm').style.visibility = 'hidden';
+                document.getElementById('postAnnouncementForm').style.visibility = 'hidden';
+                document.getElementById('addCourseForm').style.visibility = 'hidden';
+                break;
+            case 'add-course':
+                contentArea.innerHTML = '<h3>Add Course</h3><p>Here you can add course.</p>';
+                document.getElementById('addClassForm').style.visibility = 'hidden';
+                document.getElementById('createUserForm').style.visibility = 'hidden';
+                document.getElementById('leaveRequestForm').style.visibility = 'hidden';
+                document.getElementById('postAnnouncementForm').style.visibility = 'hidden';
+                document.getElementById('addCourseForm').style.visibility = 'visible';
+                break;
+            case 'manage-announcements':
+                contentArea.innerHTML = '<h3>Post Announcements</h3><p>Here you can create announcements.</p>';
+                document.getElementById('createUserForm').style.visibility = 'hidden';
+                document.getElementById('leaveRequestForm').style.visibility = 'hidden';
+                document.getElementById('postAnnouncementForm').style.visibility = 'visible';
+                document.getElementById('addClassForm').style.visibility = 'hidden';
+                document.getElementById('addCourseForm').style.visibility = 'hidden';
+                break;
+            case 'leave-requests':
+                contentArea.innerHTML = '<h3>Leave Requests</h3><p>View and approve/reject leave requests here.</p>';
+                document.getElementById('createUserForm').style.visibility = 'hidden';
+                document.getElementById('addClassForm').style.visibility = 'hidden';
+                document.getElementById('leaveRequestForm').style.visibility = 'visible';
+                document.getElementById('postAnnouncementForm').style.visibility = 'hidden';
+                document.getElementById('addCourseForm').style.visibility = 'hidden';
+                break;
+            case 'view-announcements':
+                loadAnnouncements();
+                document.getElementById('createUserForm').style.visibility = 'hidden';
+                document.getElementById('leaveRequestForm').style.visibility = 'hidden';
+                document.getElementById('postAnnouncementForm').style.visibility = 'hidden';
+                document.getElementById('addClassForm').style.visibility = 'hidden';
+                document.getElementById('addCourseForm').style.visibility = 'hidden';
+                break;
+            default:
+                contentArea.innerHTML = '<p>Select a section from the sidebar.</p>';
+                document.getElementById('createUserForm').style.visibility = 'hidden';
+                document.getElementById('leaveRequestForm').style.visibility = 'hidden';
+                document.getElementById('postAnnouncementForm').style.visibility = 'hidden';
+                document.getElementById('addClassForm').style.visibility = 'hidden';
+                document.getElementById('addCourseForm').style.visibility = 'hidden';
+        }
+    }
+
+    // Handle form submissions for creating a user
+    document.getElementById('createUserForm')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const roleID = document.getElementById('role').value;
+
+        try {
+            const response = await fetch('/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ firstName: firstName, lastName: lastName, email: email, password: password, role: { roleID: roleID } })
+            });
+
+            if (response.ok) {
+                alert('User created successfully!');
+                closeModal('createUserModal');
+                navigate('view-students');
+            } else {
+                alert('Failed to create user. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error creating user:', error);
+        }
+    });
+
+    document.getElementById('addClasses')?.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get form data
+        const className = document.getElementById('className').value;
+
+        try {
+            // Send POST request to add course
+            const response = await fetch('/api/classes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Include token if needed
+                },
+                body: JSON.stringify({className: className}) // Send course data
+            });
+
+            // Handle response
+            if (response.ok) {
+                alert('Course added successfully!');
+                // Optionally clear the form or navigate to another page
+                document.getElementById('addCourseForm').reset();
+            } else {
+                const errorData = await response.json();
+                alert(`Failed to add course: ${errorData.message || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Error adding course:', error);
+            alert('An unexpected error occurred. Please try again.');
+        }
+    });
+
+    //Handle form submissions for adding courses
+    document.getElementById('addCourseForm')?.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get form data
+        const courseName = document.getElementById('courseName').value;
+
+        try {
+            // Send POST request to add course
+            const response = await fetch('/api/courses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Include token if needed
+                },
+                body: JSON.stringify({courseName: courseName, teacher:  { teacherID: userID}, classes:{classID: classID} }) // Send course data
+            });
+
+            // Handle response
+            if (response.ok) {
+                alert('Course added successfully!');
+                // Optionally clear the form or navigate to another page
+                document.getElementById('addCourseForm').reset();
+            } else {
+                const errorData = await response.json();
+                alert(`Failed to add course: ${errorData.message || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Error adding course:', error);
+            alert('An unexpected error occurred. Please try again.');
+        }
+    });
+
+
+    // Handle form submissions for announcements
+    document.getElementById('postAnnouncementForm')?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const title = document.getElementById('announcementTitle').value;
+        const message = document.getElementById('announcementMessage').value;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const userID = urlParams.get('userID');
+
+        try {
+            const response = await fetch('/api/announcements', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({admin: { userID: userID }, title: title, message: message})
+            });
+
+            if (response.ok) {
+                alert('Announcement posted successfully!');
+                closeModal('postAnnouncementModal');
+                navigate('view-announcements');
+            } else {
+                alert('Failed to post announcement. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error posting announcement:', error);
+        }
+    });
+
+    // Function to fetch and display announcements
+    async function loadAnnouncements() {
+        try {
+            const response = await fetch('/api/announcements', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (response.ok) {
+                const announcements = await response.json();
+                let announcementsList = `<h3>Announcements</h3><ul>`;
+                announcements.forEach(announcement => {
+                    announcementsList += `<li><strong>${announcement.title}</strong>: ${announcement.message} (Posted by: ${announcement.admin.firstName} ${announcement.admin.lastName})</li>`;
+                });
+                announcementsList += '</ul>';
+                document.getElementById('content-area').innerHTML = announcementsList;
+            } else {
+                alert('Failed to load announcements. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error loading announcements:', error);
+        }
+    }
+
+    // Function to display the current date and time
+    function updateDateTime() {
+        const now = new Date();
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById('current-date').textContent = now.toLocaleDateString(undefined, dateOptions);
+        document.getElementById('current-time').textContent = now.toLocaleTimeString(undefined, timeOptions);
+    }
+
+    // Update date and time every second
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+</script>
+</body>
+</html>

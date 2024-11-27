@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Student Dashboard</title>
+</head>
+<body>
+<div class="sidebar">
+    <h2>Student Dashboard</h2>
+    <ul>
+        <li><a href="#" onclick="navigate('view-attendance')">View Attendance</a></li>
+        <li><a href="#" onclick="navigate('view-grades')">View Grades</a></li>
+    </ul>
+</div>
+<div class="main-content">
+    <h1>Welcome, Student</h1>
+    <div id="content-area">
+        <!-- Content will be loaded here dynamically -->
+    </div>
+</div>
+
+<script>
+    function navigate(section) {
+        let contentArea = document.getElementById('content-area');
+        switch (section) {
+            case 'view-attendance':
+                loadAttendance();
+                break;
+            case 'view-grades':
+                loadGrades();
+                break;
+            default:
+                contentArea.innerHTML = '<p>Select a section from the sidebar.</p>';
+        }
+    }
+
+    async function loadAttendance() {
+        try {
+            const response = await fetch("/api/attendance/student", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+
+            if (response.ok) {
+                const attendanceRecords = await response.json();
+                let attendanceTable = '<table><tr><th>Date</th><th>Course</th><th>Status</th></tr>';
+                attendanceRecords.forEach(record => {
+                    attendanceTable += `<tr>
+                            <td>${record.date}</td>
+                            <td>${record.courseName}</td>
+                            <td>${record.status}</td>
+                        </tr>`;
+                });
+                attendanceTable += '</table>';
+                document.getElementById('content-area').innerHTML = attendanceTable;
+            } else {
+                alert("Failed to load attendance.");
+            }
+        } catch (error) {
+            console.error("Error loading attendance:", error);
+        }
+    }
+
+    async function loadGrades() {
+        try {
+            const response = await fetch("/api/grades/student", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+
+            if (response.ok) {
+                const grades = await response.json();
+                let gradeTable = '<table><tr><th>Course</th><th>Marks</th></tr>';
+                grades.forEach(grade => {
+                    gradeTable += `<tr>
+                            <td>${grade.courseName}</td>
+                            <td>${grade.marks}</td>
+                        </tr>`;
+                });
+                gradeTable += '</table>';
+                document.getElementById('content-area').innerHTML = gradeTable;
+            } else {
+                alert("Failed to load grades.");
+            }
+        } catch (error) {
+            console.error("Error loading grades:", error);
+        }
+    }
+</script>
+</body>
+</html>
