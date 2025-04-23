@@ -36,4 +36,5 @@ public class AnnouncementsController {
         Announcements savedAnnouncement = announcementService.createAnnouncement(announcement);
         return ResponseEntity.ok(savedAnnouncement);
     }
+
 }

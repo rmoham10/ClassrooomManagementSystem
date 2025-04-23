@@ -5,15 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>Student Dashboard</title>
+    <style>
+        .form {
+            display: none; /* Forms are hidden by default */
+            margin-top: 20px;
+        }
+
+        .form.active {
+            display: block; /* Only the active form is displayed */
+        }
+    </style>
 </head>
+<body
+style="background-image: url('images/image5.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+</body>
 <body>
-<div class="sidebar">
+<button onclick="goBack()">back</button>
+<button onclick="navigateHome()">Home</button>
+<button onclick="logout()">Logout</button>
+
+
     <h2>Student Dashboard</h2>
-    <ul>
-        <li><a href="#" onclick="navigate('view-attendance')">View Attendance</a></li>
-        <li><a href="#" onclick="navigate('view-grades')">View Grades</a></li>
-    </ul>
-</div>
+
+        <ul>
+            <li><a href="#" onclick="navigate('view-attendance')">View Attendance</a></li>
+            <li><a href="#" onclick="navigate('view-grades')">View Grades</a></li>
+        </ul>
+
+
 <div class="main-content">
     <h1>Welcome, Student</h1>
     <div id="content-area">
@@ -22,6 +41,17 @@
 </div>
 
 <script>
+    // Redirect if not logged in
+    if (!localStorage.getItem('token')) {
+        window.location.href = 'index.html';
+    }
+
+    function goBack() {
+        loadAnnouncements();
+    }
+    function navigateHome() {
+        window.location.href = 'index.html';
+    }
     function navigate(section) {
         let contentArea = document.getElementById('content-area');
         switch (section) {
@@ -36,32 +66,28 @@
         }
     }
 
-    async function loadAttendance() {
+    async function loadAnnouncements() {
         try {
-            const response = await fetch("/api/attendance/student", {
-                method: "GET",
+            const response = await fetch('/api/announcements', {
+                method: 'GET',
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
 
             if (response.ok) {
-                const attendanceRecords = await response.json();
-                let attendanceTable = '<table><tr><th>Date</th><th>Course</th><th>Status</th></tr>';
-                attendanceRecords.forEach(record => {
-                    attendanceTable += `<tr>
-                            <td>${record.date}</td>
-                            <td>${record.courseName}</td>
-                            <td>${record.status}</td>
-                        </tr>`;
+                const announcements = await response.json();
+                let announcementsList = `<h1>Announcements</h1><ul>`;
+                announcements.forEach(announcement => {
+                    announcementsList += `<li><strong>${announcement.title}</strong>: ${announcement.message} </li>`;
                 });
-                attendanceTable += '</table>';
-                document.getElementById('content-area').innerHTML = attendanceTable;
+                announcementsList += '</ul>';
+                document.getElementById('content-area').innerHTML = announcementsList;
             } else {
-                alert("Failed to load attendance.");
+                alert('Failed to load announcements. Please try again.');
             }
         } catch (error) {
-            console.error("Error loading attendance:", error);
+            console.error('Error loading announcements:', error);
         }
     }
 
@@ -92,6 +118,27 @@
             console.error("Error loading grades:", error);
         }
     }
+
+    function logout() {
+        // Clear the session
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+
+        // Prevent back navigation
+        history.pushState(null, '', window.location.href);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, '', window.location.href);
+        });
+
+        // Notify the user
+        alert('You have been logged out.');
+
+        // Redirect to the home page
+        window.location.href = 'index.html';
+    }
+
+
+    window.onload = loadAnnouncements;
 </script>
 </body>
 </html>

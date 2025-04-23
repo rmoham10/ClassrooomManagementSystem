@@ -1,6 +1,7 @@
 package org.example.classrooommanagementsystem.controller;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.example.classrooommanagementsystem.entity.Users;
 import org.example.classrooommanagementsystem.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,10 @@ public class UsersController {
         Users createdUser = userService.createUser(userRequest);
         return ResponseEntity.ok(createdUser);
     }
+
+
     @Getter
+    @Setter
     static class LoginResponse {
         private final String token;
         private final String role;
@@ -52,4 +56,5 @@ public class UsersController {
             this.userID = userID;
         }
     }
+
 }
